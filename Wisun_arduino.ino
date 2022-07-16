@@ -14,7 +14,7 @@ SoftwareSerial mySerial(7, 8);//rx,tx
 dimmerLamp acd(acdPin);
 
 void setup(){
-pinMode(LED_BUILTIN, OUTPUT);
+delay(5000);
 pinMode(A0, OUTPUT);
 Serial.begin(9600);
 Serial.println("sending connect command");
@@ -22,16 +22,10 @@ Serial.println(F("Initialize System"));
 acd.begin(NORMAL_MODE, ON);
 mySerial.begin(9600);
 mySerial.println("wisun connect");
- digitalWrite(LED_BUILTIN, HIGH);   
- delay(5000);                       
- digitalWrite(LED_BUILTIN, LOW);   
 
 while(mySerial.available())
  {
- digitalWrite(LED_BUILTIN, HIGH);   
- delay(1000);                       
- digitalWrite(LED_BUILTIN, LOW);   
- delay(100); 
+
 str=mySerial.readStringUntil('\n');
  Serial.println(str);
  Serial.println(str.substring(1,3));
@@ -39,10 +33,7 @@ str=mySerial.readStringUntil('\n');
   if(str.substring(1,3)=="Fa")
   {
    
- digitalWrite(LED_BUILTIN, HIGH);   
- delay(1000);                       
- digitalWrite(LED_BUILTIN, LOW);   
- delay(1000); 
+
   break;
   }
   mySerial.println("wisun connect");
