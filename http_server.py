@@ -57,6 +57,9 @@ if __name__ == '__main__':
     else:
         run()
 UDP_PORT = 5001 
+
+
+
 while(1):
     MESSAGE=con_data
     print(MESSAGE)
