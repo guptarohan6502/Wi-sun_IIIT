@@ -15,6 +15,7 @@ delay(5000);
 Serial.begin(9600);
 mySerial.begin(9600);
 pinMode(13, OUTPUT);
+pinMode(LED_BUILTIN, OUTPUT);
 Serial.println("sending connect command");
 Serial.println(F("Initialize System"));
 acd.begin(NORMAL_MODE, ON);
@@ -41,17 +42,19 @@ if(str.substring(1,3)=="on")
 acd.setPower(MAX_POWER);
 mySerial.println("wisun socket_write 4 \"its on!\"");
 Serial.println("on");
+digitalWrite(LED_BUILTIN, HIGH);
 }
-if(str.substring(1,3)=="off")
+if(str.substring(1,4)=="off")
 {
 acd.setPower(0);
-Serial.println("off");
 mySerial.println("wisun socket_write 4 \"its off!\"");
+Serial.println("off");
+digitalWrite(LED_BUILTIN, LOW);
 }
 if(str.substring(1,4)=="dim")
 {
 acd.setPower(MIN_POWER);
-//Serial.println("dim");
+Serial.println("dim");
 }
 }
 if (Serial.available()) {
