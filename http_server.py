@@ -8,9 +8,15 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import json
 import socket
-UDP_PORT = 5001
-UDP_IP = "fd12:3456::b6e3:f9ff:fea6:2e7"
+import time
+UDP_IP =  "fd12:3456::5232:5fff:fe42:8a37"
+UDP_IP1 = "fd12:3456::b6e3:f9ff:fea6:2e7"
+UDP_IP2 = "fd12:3456::b6e3:f9ff:fea6:331"
+UDP_IP3 = "fd12:3456::b6e3:f9ff:fea6:314"
 
+UDP_PORT = 5001
+HOST_IP="fd12:3456::1"
+PORT = 5005
 class S(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
@@ -26,16 +32,37 @@ class S(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
         received_data = json.loads (post_data)
+        #print("Hi")
         try:
             con_data=received_data["m2m:sgn"]["m2m:nev"]["m2m:rep"]["m2m:cin"]["con"]
             print(con_data)
+            MESSAGE=con_data
+            while True:
+
+                print ("message:", MESSAGE) 
+                
+                message_bytes = str.encode(MESSAGE) 
+                sock = socket.socket(socket.AF_INET6, # Internet
+                                socket.SOCK_DGRAM) # UDP
+                sock.sendto(message_bytes, (UDP_IP, UDP_PORT))
+                sock.sendto(message_bytes, (UDP_IP1, UDP_PORT))
+                sock.sendto(message_bytes, (UDP_IP2, UDP_PORT))
+                sock.sendto(message_bytes, (UDP_IP3, UDP_PORT))
+                time.sleep(1)
+                while True:
+                    sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+                    sock.bind((HOST_IP, PORT))
+                    print(f"Listening to {HOST_IP}/{PORT} for incoming messages")
+                    
+                    data, addr = sock.recvfrom(2048) # buffer size is 2048 bytes
+                    print ("received message:", data)
         except:
             
-            logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-                str(self.path), str(self.headers), post_data.decode('utf-8'))
+           # logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
+                #str(self.path), str(self.headers), post_data.decode('utf-8'))
 
-        self._set_response()
-        self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+            self._set_response()
+            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
 def run(server_class=HTTPServer, handler_class=S, port=1400):
     logging.basicConfig(level=logging.INFO)
@@ -56,17 +83,6 @@ if __name__ == '__main__':
         run(port=int(argv[1]))
     else:
         run()
-UDP_PORT = 5001 
 
 
 
-while(1):
-    MESSAGE=con_data
-    print(MESSAGE)
-    time.sleep(1)
-    while True:
-      print ("message:", MESSAGE)
-      message_bytes = str.encode(MESSAGE) 
-      sock = socket.socket(socket.AF_INET6, # Internet
-					socket.SOCK_DGRAM) # UDP
-      sock.sendto(message_bytes, (UDP_IP, UDP_PORT))
