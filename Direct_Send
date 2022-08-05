@@ -1,0 +1,68 @@
+import socket
+import json
+import requests
+UDP_IP1 = "fd12:3456::b6e3:f9ff:fea6:2e7"
+UDP_IP2 = "fd12:3456::b6e3:f9ff:fea6:331"
+UDP_IP3 = "fd12:3456::b6e3:f9ff:fea6:314"
+UDP_IP4 = "fd12:3456::b6e3:f9ff:fea6:53e"
+UDP_IP =  "fd12:3456::5232:5fff:fe42:8a37"
+
+UDP_PORT = 5001 # Port 
+HOST_IP="fd12:3456::1"
+PORT = 5005
+
+def create_cin(uri_cnt, value, cin_labels="", data_format="json"):
+    """
+        Method description:
+        Deletes/Unregisters an application entity(AE) from the OneM2M framework/tree
+        under the specified CSE
+        Parameters:
+        uri_cse : [str] URI of parent CSE
+        ae_name : [str] name of the AE
+        fmt_ex : [str] payload format
+    """
+    headers = {
+        'X-M2M-Origin': 'devtest:devtest',
+        'Content-type': 'application/{};ty=4'.format(data_format)}
+
+    body = {
+        "m2m:cin": {
+            "con": "{}".format(value),
+            "lbl": cin_labels,
+            "cnf": "text"
+        }
+    }
+    
+    try:
+        response = requests.post(uri_cnt, json=body, headers=headers)
+    except TypeError:
+        response = requests.post(uri_cnt, data=json.dumps(body), headers=headers)
+    print('Return code : {}'.format(response.status_code))
+    print('Return Content : {}'.format(response.text))
+
+while True:
+  msg = input("Enter message: ")
+  MESSAGE = msg # Message 
+
+  print ("UDP target IP:", UDP_IP) 
+  print ("UDP target port:", UDP_PORT) 
+  print ("message:", MESSAGE) 
+
+  message_bytes = str.encode(MESSAGE) 
+  sock = socket.socket(socket.AF_INET6, # Internet
+					socket.SOCK_DGRAM) # UDP
+  sock.sendto(message_bytes, (UDP_IP1, UDP_PORT))
+  sock.sendto(message_bytes, (UDP_IP2, UDP_PORT))
+  sock.sendto(message_bytes, (UDP_IP3, UDP_PORT))
+  sock.sendto(message_bytes, (UDP_IP4, UDP_PORT))
+  sock.sendto(message_bytes, (UDP_IP, UDP_PORT))
+
+
+  while True:
+      
+      sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+      sock.bind((HOST_IP, PORT))
+      data, addr = sock.recvfrom(2048) # buffer size is 2048 bytes
+      print ("received message:", data)
+      #create_cin ("http://dev-onem2m.iiit.ac.in:443/~/in-cse/in-name/AE-WiSUN/Ack",data)
+      break
