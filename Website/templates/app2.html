@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wi-Sun Smart City Research Center</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}
+body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 50px;}
+.column {
+  float: left;
+  width: 33.33%;
+}
+.row{
+  height: 15%;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.button {display: block;width: 80px;background-color: #1abc9c;border: none;color: white;padding: 10px;text-decoration: none;font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px; text-align: center;}
+
+</style>
+<body>
+	<div class="row">
+		<div class="column"><img src="{{url_for('static',filename='iiith.png')}}" width="100%" /></div>
+		<div class="column"><img src="{{url_for('static',filename='logo.png')}}" width="100%"  /></div>
+		<div class="column"><img src="{{url_for('static',filename='Silicon_Labs.jpg')}}"  width="100%"/></div>
+	</div>
+	<div style="margin:0px auto">
+		<h1> NODE 1</h1>
+		<form action="/on" method="post" >
+			<button class="button" name="on" type="submit">ON</button>
+		</form>
+	</div>
+
+
+	<!-- <img src="iiith.png" width="30vw" height="25vh" float="left" >
+	<img src="logo.png" width="30vw" height="25vh" float="Center">
+	<img src="Silicon Labs.jpg"  width="30vw" height="25vh" float="right"> -->
+</body>
+</html>
